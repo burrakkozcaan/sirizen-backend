@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Filament\Resources\OrderItems\Schemas;
+
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+
+class OrderItemForm
+{
+    public static function configure(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Section::make('Genel Bilgiler')
+                    ->description('Kaydı düzenlemek için gerekli alanları doldurun.')
+                    ->schema([
+                        TextInput::make('order_id')
+                            ->numeric()
+                            ->required(),
+
+                        TextInput::make('vendor_id')
+                            ->numeric()
+                            ->required(),
+
+                        TextInput::make('product_id')
+                            ->numeric()
+                            ->required(),
+
+                        TextInput::make('quantity')
+                            ->numeric()
+                            ->required(),
+
+                        TextInput::make('price')
+                            ->numeric()
+                            ->required(),
+
+                        TextInput::make('status')
+                            ->required(),
+                    ])
+                    ->columnSpanFull(),
+            ]);
+    }
+}

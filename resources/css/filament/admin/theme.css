@@ -1,0 +1,14 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+
+.fi-body {
+    background-color: white !important;
+}
+
+.fi-simple-main{
+
+    box-shadow: none !important;
+}
