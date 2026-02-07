@@ -1,0 +1,2 @@
+[start]
+cmd = "bash -c 'PORT=${PORT:-80} && sed \"s/{{PORT}}/$PORT/g\" /app/.nixpacks/nginx.template.conf > /nginx.conf && supervisord -c /supervisord.conf'"
