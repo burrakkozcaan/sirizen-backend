@@ -3,4 +3,28 @@ cmds = [
     "npm run build",
     "chmod -R 775 /app/storage /app/bootstrap/cache",
     "chown -R www-data:www-data /app/storage /app/bootstrap/cache",
+    "chmod +x /assets/start.sh",
 ]
+
+[start]
+cmd = "/assets/start.sh"
+
+[staticAssets]
+"start.sh" = '''
+#!/bin/bash
+set -e
+
+# Run Nixpacks default prestart to generate nginx.conf from template
+if [ -f /assets/scripts/prestart.mjs ]; then
+    node /assets/scripts/prestart.mjs /nginx.template.conf /nginx.conf 2>/dev/null || true
+fi
+
+# Fix duplicate "location /" blocks - remove second occurrence
+perl -0777 -i -pe 's/(location\s+\/\s+\{[^}]+\})(.*?)(location\s+\/\s+\{[^}]+\})/$1$2/s' /nginx.conf 2>/dev/null || true
+
+# Verify nginx config
+nginx -t -c /nginx.conf 2>/dev/null || echo "Warning: nginx config test failed, attempting to start anyway"
+
+# Start supervisord
+exec supervisord -c /supervisord.conf
+'''
