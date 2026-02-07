@@ -64,7 +64,10 @@ class SellerBadgeSeeder extends Seeder
         ];
 
         foreach ($badges as $badgeData) {
-            SellerBadge::create($badgeData);
+            SellerBadge::updateOrCreate(
+                ['slug' => $badgeData['slug']],
+                $badgeData
+            );
         }
 
         // Satıcılara rastgele rozetler ata
@@ -81,12 +84,13 @@ class SellerBadgeSeeder extends Seeder
             $selectedBadges = $allBadges->random(min($badgeCount, $allBadges->count()));
 
             foreach ($selectedBadges as $badge) {
-                SellerBadgeAssignment::create([
-                    'vendor_id' => $vendor->id,
-                    'badge_id' => $badge->id,
-                    'assigned_at' => now()->subDays(rand(1, 60)),
-                    'expires_at' => rand(0, 1) ? now()->addMonths(rand(3, 12)) : null,
-                ]);
+                SellerBadgeAssignment::updateOrCreate(
+                    ['vendor_id' => $vendor->id, 'badge_id' => $badge->id],
+                    [
+                        'assigned_at' => now()->subDays(rand(1, 60)),
+                        'expires_at' => rand(0, 1) ? now()->addMonths(rand(3, 12)) : null,
+                    ]
+                );
             }
         }
     }

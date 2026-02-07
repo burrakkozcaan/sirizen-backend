@@ -299,13 +299,14 @@ class UnifiedDemoSeeder extends Seeder
         $product->images()->delete();
 
         foreach ($selectedImages as $index => $url) {
-            ProductImage::create([
-                'product_id' => $product->id,
-                'url' => $url,
-                'alt' => $product->title,
-                'order' => $index,
-                'is_main' => $index === 0,
-            ]);
+            ProductImage::updateOrCreate(
+                ['product_id' => $product->id, 'order' => $index],
+                [
+                    'url' => $url,
+                    'alt' => $product->title,
+                    'is_main' => $index === 0,
+                ]
+            );
         }
     }
 
@@ -391,19 +392,20 @@ class UnifiedDemoSeeder extends Seeder
             $priceModifier = rand(-10, 20); // -10% ile +20% arası fiyat farkı
             $variantPrice = $product->price * (1 + $priceModifier / 100);
 
-            ProductVariant::create([
-                'product_id' => $product->id,
-                'sku' => $product->slug . '-' . implode('-', array_values($combo)),
-                'value' => implode(' / ', array_values($combo)),
-                'color' => $combo['renk'] ?? ($combo['ton'] ?? null),
-                'size' => $combo['beden'] ?? null,
-                'price' => round($variantPrice, 2),
-                'original_price' => $product->discount_price ? round($variantPrice, 2) : null,
-                'sale_price' => $product->discount_price ? round($product->discount_price * (1 + $priceModifier / 100), 2) : null,
-                'stock' => rand(0, 50),
-                'is_active' => true,
-                'is_default' => false,
-            ]);
+            ProductVariant::updateOrCreate(
+                ['product_id' => $product->id, 'sku' => $product->slug . '-' . implode('-', array_values($combo))],
+                [
+                    'value' => implode(' / ', array_values($combo)),
+                    'color' => $combo['renk'] ?? ($combo['ton'] ?? null),
+                    'size' => $combo['beden'] ?? null,
+                    'price' => round($variantPrice, 2),
+                    'original_price' => $product->discount_price ? round($variantPrice, 2) : null,
+                    'sale_price' => $product->discount_price ? round($product->discount_price * (1 + $priceModifier / 100), 2) : null,
+                    'stock' => rand(0, 50),
+                    'is_active' => true,
+                    'is_default' => false,
+                ]
+            );
         }
 
         // İlk varyantı default yap

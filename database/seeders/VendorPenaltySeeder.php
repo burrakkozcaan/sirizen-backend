@@ -31,13 +31,15 @@ class VendorPenaltySeeder extends Seeder
             $penaltyCount = rand(1, 2);
 
             for ($i = 0; $i < $penaltyCount; $i++) {
-                VendorPenalty::create([
-                    'vendor_id' => $vendor->id,
-                    'reason' => $penaltyReasons[array_rand($penaltyReasons)],
-                    'penalty_points' => rand(5, 25),
-                    'expires_at' => now()->addDays(rand(30, 90)),
-                    'created_at' => now()->subDays(rand(1, 30)),
-                ]);
+                $reason = $penaltyReasons[array_rand($penaltyReasons)];
+                VendorPenalty::firstOrCreate(
+                    ['vendor_id' => $vendor->id, 'reason' => $reason],
+                    [
+                        'penalty_points' => rand(5, 25),
+                        'expires_at' => now()->addDays(rand(30, 90)),
+                        'created_at' => now()->subDays(rand(1, 30)),
+                    ]
+                );
             }
         }
     }

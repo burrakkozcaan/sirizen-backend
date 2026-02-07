@@ -22,7 +22,9 @@ class ProductCampaignSeeder extends Seeder
         ];
 
         foreach ($links as $link) {
-            ProductCampaign::create($link);
+            ProductCampaign::firstOrCreate(
+                ['product_id' => $link['product_id'], 'campaign_id' => $link['campaign_id']]
+            );
         }
     }
 }

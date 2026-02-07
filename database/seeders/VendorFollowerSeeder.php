@@ -25,14 +25,15 @@ class VendorFollowerSeeder extends Seeder
             $selectedVendors = $vendors->random(min($followCount, $vendors->count()));
 
             foreach ($selectedVendors as $vendor) {
-                VendorFollower::create([
-                    'user_id' => $customer->id,
-                    'vendor_id' => $vendor->id,
-                    'created_at' => now()->subDays(rand(1, 90)),
-                ]);
+                $created = VendorFollower::firstOrCreate(
+                    ['user_id' => $customer->id, 'vendor_id' => $vendor->id],
+                    ['created_at' => now()->subDays(rand(1, 90))]
+                );
 
-                // Satıcının followers sayısını güncelle
-                $vendor->increment('followers');
+                // Satıcının followers sayısını güncelle (only if newly created)
+                if ($created->wasRecentlyCreated) {
+                    $vendor->increment('followers');
+                }
             }
         }
     }

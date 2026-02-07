@@ -48,24 +48,27 @@ class ProductBundleSeeder extends Seeder
                 default => 10,
             };
 
-            $bundle = ProductBundle::create([
-                'main_product_id' => $mainProduct->id,
-                'title' => match ($bundleType) {
-                    'quantity_discount' => "Çok Al Az Öde - {$mainProduct->title}",
-                    'set' => "Set Ürün - {$mainProduct->title}",
-                    'combo' => "Kombinasyon Paketi - {$mainProduct->title}",
-                    default => "Paket - {$mainProduct->title}",
-                },
-                'bundle_type' => $bundleType,
-                'discount_rate' => $discountRate,
-                'is_active' => true,
-            ]);
+            $bundle = ProductBundle::updateOrCreate(
+                ['main_product_id' => $mainProduct->id, 'bundle_type' => $bundleType],
+                [
+                    'title' => match ($bundleType) {
+                        'quantity_discount' => "Çok Al Az Öde - {$mainProduct->title}",
+                        'set' => "Set Ürün - {$mainProduct->title}",
+                        'combo' => "Kombinasyon Paketi - {$mainProduct->title}",
+                        default => "Paket - {$mainProduct->title}",
+                    },
+                    'discount_rate' => $discountRate,
+                    'is_active' => true,
+                ]
+            );
 
-            // Bundle'a ürünleri ekle
+            // Bundle'a ürünleri ekle (sync to avoid duplicates)
+            $syncData = [];
             $order = 0;
             foreach ($relatedProducts as $product) {
-                $bundle->products()->attach($product->id, ['order' => $order++]);
+                $syncData[$product->id] = ['order' => $order++];
             }
+            $bundle->products()->syncWithoutDetaching($syncData);
 
             $createdCount++;
         }

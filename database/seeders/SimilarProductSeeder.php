@@ -62,12 +62,16 @@ class SimilarProductSeeder extends Seeder
 
                 $relationType = $relationTypes[array_rand($relationTypes)];
 
-                SimilarProduct::create([
-                    'product_id' => $product->id,
-                    'similar_product_id' => $similarProduct->id,
-                    'score' => round($score, 2),
-                    'relation_type' => $relationType,
-                ]);
+                SimilarProduct::updateOrCreate(
+                    [
+                        'product_id' => $product->id,
+                        'similar_product_id' => $similarProduct->id,
+                    ],
+                    [
+                        'score' => round($score, 2),
+                        'relation_type' => $relationType,
+                    ]
+                );
 
                 $createdCount++;
             }

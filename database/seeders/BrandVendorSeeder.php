@@ -27,12 +27,14 @@ class BrandVendorSeeder extends Seeder
         $vendorIndex = 0;
         foreach ($vendors->take(3) as $vendor) {
             if (isset($vendorOwnedBrands[$vendorIndex])) {
-                Brand::create([
-                    'name' => $vendorOwnedBrands[$vendorIndex]['name'],
-                    'slug' => $vendorOwnedBrands[$vendorIndex]['slug'],
-                    'vendor_id' => $vendor->id,
-                    'is_vendor_brand' => true,
-                ]);
+                Brand::updateOrCreate(
+                    ['slug' => $vendorOwnedBrands[$vendorIndex]['slug']],
+                    [
+                        'name' => $vendorOwnedBrands[$vendorIndex]['name'],
+                        'vendor_id' => $vendor->id,
+                        'is_vendor_brand' => true,
+                    ]
+                );
                 $vendorIndex++;
             }
         }
@@ -43,11 +45,13 @@ class BrandVendorSeeder extends Seeder
             $authorizedBrands = $brands->random(min(rand(2, 5), $brands->count()));
 
             foreach ($authorizedBrands as $brand) {
-                $vendor->authorizedBrands()->attach($brand->id, [
-                    'is_authorized' => true,
-                    'authorized_at' => now()->subDays(rand(1, 180)),
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                $vendor->authorizedBrands()->syncWithoutDetaching([
+                    $brand->id => [
+                        'is_authorized' => true,
+                        'authorized_at' => now()->subDays(rand(1, 180)),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
                 ]);
             }
         }

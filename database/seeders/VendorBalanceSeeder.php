@@ -24,17 +24,19 @@ class VendorBalanceSeeder extends Seeder
             $availableBalance = $totalEarnings - $totalWithdrawn - $pendingBalance; // Kullanılabilir bakiye
             $balance = $availableBalance + $pendingBalance; // Toplam bakiye
 
-            VendorBalance::create([
-                'vendor_id' => $vendor->id,
-                'balance' => $balance,
-                'available_balance' => max(0, $availableBalance), // Negatif olmamalı
-                'pending_balance' => $pendingBalance,
-                'total_earnings' => $totalEarnings,
-                'total_withdrawn' => $totalWithdrawn,
-                'currency' => 'TRY',
-                'last_settlement_at' => now()->subDays(rand(1, 15)),
-                'created_at' => now()->subMonths(rand(1, 6)),
-            ]);
+            VendorBalance::updateOrCreate(
+                ['vendor_id' => $vendor->id],
+                [
+                    'balance' => $balance,
+                    'available_balance' => max(0, $availableBalance), // Negatif olmamalı
+                    'pending_balance' => $pendingBalance,
+                    'total_earnings' => $totalEarnings,
+                    'total_withdrawn' => $totalWithdrawn,
+                    'currency' => 'TRY',
+                    'last_settlement_at' => now()->subDays(rand(1, 15)),
+                    'created_at' => now()->subMonths(rand(1, 6)),
+                ]
+            );
         }
     }
 }

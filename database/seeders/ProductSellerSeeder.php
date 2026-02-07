@@ -62,21 +62,25 @@ class ProductSellerSeeder extends Seeder
                 fake()->randomNumber(4, true),
             ];
 
-            ProductSeller::create([
-                'product_id' => $product->id,
-                'variant_id' => $variant?->id,
-                'vendor_id' => $vendor->id,
-                'seller_sku' => implode('-', $skuParts),
-                'price' => round($vendorPrice, 2),
-                'sale_price' => $salePrice ? round($salePrice, 2) : null,
-                'stock' => fake()->numberBetween(0, 150),
-                'dispatch_days' => fake()->numberBetween(0, 5),
-                'shipping_type' => fake()->randomElement(['normal', 'express', 'same_day']),
-                'free_shipping' => fake()->boolean(40),
-                'is_featured' => $index === 0,
-                'is_buybox_winner' => false, // BuyBoxService hesaplayacak
-                'created_at' => now()->subDays(fake()->numberBetween(1, 60)),
-            ]);
+            ProductSeller::updateOrCreate(
+                [
+                    'product_id' => $product->id,
+                    'variant_id' => $variant?->id,
+                    'vendor_id' => $vendor->id,
+                ],
+                [
+                    'seller_sku' => implode('-', $skuParts),
+                    'price' => round($vendorPrice, 2),
+                    'sale_price' => $salePrice ? round($salePrice, 2) : null,
+                    'stock' => fake()->numberBetween(0, 150),
+                    'dispatch_days' => fake()->numberBetween(0, 5),
+                    'shipping_type' => fake()->randomElement(['normal', 'express', 'same_day']),
+                    'free_shipping' => fake()->boolean(40),
+                    'is_featured' => $index === 0,
+                    'is_buybox_winner' => false, // BuyBoxService hesaplayacak
+                    'created_at' => now()->subDays(fake()->numberBetween(1, 60)),
+                ]
+            );
         }
     }
 }

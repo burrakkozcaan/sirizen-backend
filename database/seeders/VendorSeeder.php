@@ -109,13 +109,15 @@ class VendorSeeder extends Seeder
 
         foreach ($vendors as $vendorData) {
             // Create user for vendor
-            $user = User::create([
-                'name' => $vendorData['name'],
-                'email' => $vendorData['email'],
-                'password' => Hash::make('password'),
-                'role' => UserRole::VENDOR,
-                'phone' => $vendorData['phone'],
-            ]);
+            $user = User::updateOrCreate(
+                ['email' => $vendorData['email']],
+                [
+                    'name' => $vendorData['name'],
+                    'password' => Hash::make('password'),
+                    'role' => UserRole::VENDOR,
+                    'phone' => $vendorData['phone'],
+                ]
+            );
 
             // Tier ataması: Büyük markalar için Altın (3), diğerleri için Gümüş (2)
             $totalOrders = $vendorData['follower_count'] / 1000; // Takipçilere göre sipariş tahmini
@@ -131,26 +133,28 @@ class VendorSeeder extends Seeder
             $companyType = $companyTypes[array_rand($companyTypes)];
 
             // Create vendor with only existing columns
-            Vendor::create([
-                'id' => $vendorData['id'],
-                'user_id' => $user->id,
-                'tier_id' => $tierId,
-                'name' => $vendorData['name'],
-                'slug' => $vendorData['slug'],
-                'description' => $vendorData['description'],
-                'company_type' => $companyType->value,
-                'tax_number' => '12345678'.str_pad((string) $vendorData['id'], 2, '0', STR_PAD_LEFT),
-                'city' => ['İstanbul', 'Ankara', 'İzmir'][array_rand(['İstanbul', 'Ankara', 'İzmir'])],
-                'district' => ['Kadıköy', 'Çankaya', 'Karşıyaka'][array_rand(['Kadıköy', 'Çankaya', 'Karşıyaka'])],
-                'rating' => $vendorData['rating'],
-                'total_orders' => (int) $totalOrders,
-                'followers' => 0, // VendorFollowerSeeder tarafından güncellenecek
-                'response_time_avg' => $vendorData['response_time'],
-                'cancel_rate' => rand(0, 20) / 10,  // 0-2% arası
-                'return_rate' => rand(0, 50) / 10,  // 0-5% arası
-                'late_shipment_rate' => rand(0, 30) / 10, // 0-3% arası
-                'status' => $vendorData['is_active'] ? 'active' : 'inactive',
-            ]);
+            Vendor::updateOrCreate(
+                ['slug' => $vendorData['slug']],
+                [
+                    'id' => $vendorData['id'],
+                    'user_id' => $user->id,
+                    'tier_id' => $tierId,
+                    'name' => $vendorData['name'],
+                    'description' => $vendorData['description'],
+                    'company_type' => $companyType->value,
+                    'tax_number' => '12345678'.str_pad((string) $vendorData['id'], 2, '0', STR_PAD_LEFT),
+                    'city' => ['İstanbul', 'Ankara', 'İzmir'][array_rand(['İstanbul', 'Ankara', 'İzmir'])],
+                    'district' => ['Kadıköy', 'Çankaya', 'Karşıyaka'][array_rand(['Kadıköy', 'Çankaya', 'Karşıyaka'])],
+                    'rating' => $vendorData['rating'],
+                    'total_orders' => (int) $totalOrders,
+                    'followers' => 0, // VendorFollowerSeeder tarafından güncellenecek
+                    'response_time_avg' => $vendorData['response_time'],
+                    'cancel_rate' => rand(0, 20) / 10,  // 0-2% arası
+                    'return_rate' => rand(0, 50) / 10,  // 0-5% arası
+                    'late_shipment_rate' => rand(0, 30) / 10, // 0-3% arası
+                    'status' => $vendorData['is_active'] ? 'active' : 'inactive',
+                ]
+            );
         }
 
         if (DB::getDriverName() !== 'pgsql') {

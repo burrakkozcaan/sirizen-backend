@@ -72,17 +72,21 @@ class ProductQuestionSeeder extends Seeder
                 // Find the category by slug
                 $category = ProductQuestionCategory::where('slug', $qa['category_slug'])->first();
 
-                ProductQuestion::create([
-                    'product_id' => $product->id,
-                    'product_question_category_id' => $category?->id,
-                    'user_id' => $customers[$i]->id,
-                    'vendor_id' => $product->vendor_id
-                        ?? $product->productSellers->first()?->vendor_id,
-                    'question' => $qa['question'],
-                    'answer' => $qa['answer'],
-                    'answered_by_vendor' => $qa['answered_by_vendor'],
-                    'created_at' => now()->subDays(rand(5, 20)),
-                ]);
+                ProductQuestion::updateOrCreate(
+                    [
+                        'product_id' => $product->id,
+                        'user_id' => $customers[$i]->id,
+                        'question' => $qa['question'],
+                    ],
+                    [
+                        'product_question_category_id' => $category?->id,
+                        'vendor_id' => $product->vendor_id
+                            ?? $product->productSellers->first()?->vendor_id,
+                        'answer' => $qa['answer'],
+                        'answered_by_vendor' => $qa['answered_by_vendor'],
+                        'created_at' => now()->subDays(rand(5, 20)),
+                    ]
+                );
             }
         }
     }

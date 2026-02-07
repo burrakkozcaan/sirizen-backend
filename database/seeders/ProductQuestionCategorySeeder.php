@@ -101,19 +101,22 @@ class ProductQuestionCategorySeeder extends Seeder
             $categoryNames = $categoryData['categories'];
             unset($categoryData['categories']);
 
-            $questionCategory = ProductQuestionCategory::create($categoryData);
+            $questionCategory = ProductQuestionCategory::updateOrCreate(
+                ['slug' => $categoryData['slug']],
+                $categoryData
+            );
 
-            // Kategorileri bağla
+            // Kategorileri bağla (syncWithoutDetaching to avoid duplicates)
             if ($categoryNames === 'all') {
                 // Tüm ana kategorilere bağla
                 $allCategories = Category::whereNull('parent_id')->get();
-                $questionCategory->categories()->attach($allCategories->pluck('id'));
+                $questionCategory->categories()->syncWithoutDetaching($allCategories->pluck('id'));
             } else {
                 // Belirli kategorilere bağla
                 $selectedCategories = Category::whereIn('name', $categoryNames)
                     ->whereNull('parent_id')
                     ->get();
-                $questionCategory->categories()->attach($selectedCategories->pluck('id'));
+                $questionCategory->categories()->syncWithoutDetaching($selectedCategories->pluck('id'));
             }
         }
     }

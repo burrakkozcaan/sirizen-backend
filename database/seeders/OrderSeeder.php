@@ -50,16 +50,20 @@ class OrderSeeder extends Seeder
 
         $createdAt = fake()->dateTimeBetween('-3 months', 'now');
 
-        return Order::create([
-            'user_id' => $user->id,
-            'order_number' => 'ORD-'.strtoupper(fake()->unique()->bothify('##??####')),
-            'total_price' => 0,
-            'status' => $status,
-            'payment_method' => fake()->randomElement(['credit_card', 'bank_transfer', 'cash_on_delivery']),
-            'address_id' => $address?->id,
-            'created_at' => $createdAt,
-            'updated_at' => $createdAt,
-        ]);
+        $orderNumber = 'ORD-'.strtoupper(fake()->unique()->bothify('##??####'));
+
+        return Order::firstOrCreate(
+            ['order_number' => $orderNumber],
+            [
+                'user_id' => $user->id,
+                'total_price' => 0,
+                'status' => $status,
+                'payment_method' => fake()->randomElement(['credit_card', 'bank_transfer', 'cash_on_delivery']),
+                'address_id' => $address?->id,
+                'created_at' => $createdAt,
+                'updated_at' => $createdAt,
+            ]
+        );
     }
 
     private function createOrderItems(Order $order, $productSellers): void
@@ -88,20 +92,24 @@ class OrderSeeder extends Seeder
                 ];
             }
 
-            OrderItem::create([
-                'order_id' => $order->id,
-                'vendor_id' => $productSeller->vendor_id,
-                'product_seller_id' => $productSeller->id,
-                'product_id' => $productSeller->product_id,
-                'variant_id' => $productSeller->variant_id,
-                'variant_snapshot' => $variantSnapshot,
-                'quantity' => $quantity,
-                'unit_price' => $unitPrice,
-                'price' => $totalPrice,
-                'status' => $itemStatus,
-                'created_at' => $order->created_at,
-                'updated_at' => $order->updated_at,
-            ]);
+            OrderItem::firstOrCreate(
+                [
+                    'order_id' => $order->id,
+                    'product_seller_id' => $productSeller->id,
+                ],
+                [
+                    'vendor_id' => $productSeller->vendor_id,
+                    'product_id' => $productSeller->product_id,
+                    'variant_id' => $productSeller->variant_id,
+                    'variant_snapshot' => $variantSnapshot,
+                    'quantity' => $quantity,
+                    'unit_price' => $unitPrice,
+                    'price' => $totalPrice,
+                    'status' => $itemStatus,
+                    'created_at' => $order->created_at,
+                    'updated_at' => $order->updated_at,
+                ]
+            );
         }
     }
 

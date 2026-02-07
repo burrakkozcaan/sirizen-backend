@@ -59,10 +59,10 @@ class AddressSeeder extends Seeder
 
         foreach ($customers as $index => $customer) {
             if (isset($addresses[$index])) {
-                Address::create(array_merge(
-                    $addresses[$index],
-                    ['user_id' => $customer->id]
-                ));
+                Address::updateOrCreate(
+                    ['user_id' => $customer->id, 'title' => $addresses[$index]['title']],
+                    $addresses[$index]
+                );
             }
         }
     }

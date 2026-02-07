@@ -37,7 +37,10 @@ class ProductBannerSeeder extends Seeder
         ];
 
         foreach ($banners as $banner) {
-            ProductBanner::create($banner);
+            ProductBanner::updateOrCreate(
+                ['product_id' => $banner['product_id'], 'position' => $banner['position']],
+                $banner
+            );
         }
     }
 }

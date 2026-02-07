@@ -34,7 +34,10 @@ class ProductBadgeSeeder extends Seeder
         ];
 
         foreach ($badges as $badge) {
-            ProductBadge::create($badge);
+            ProductBadge::updateOrCreate(
+                ['product_id' => $badge['product_id'], 'label' => $badge['label']],
+                $badge
+            );
         }
     }
 }

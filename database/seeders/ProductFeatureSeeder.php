@@ -36,7 +36,10 @@ class ProductFeatureSeeder extends Seeder
         ];
 
         foreach ($features as $feature) {
-            ProductFeature::create($feature);
+            ProductFeature::updateOrCreate(
+                ['product_id' => $feature['product_id'], 'title' => $feature['title']],
+                $feature
+            );
         }
     }
 }

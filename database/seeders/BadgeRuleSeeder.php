@@ -23,18 +23,19 @@ class BadgeRuleSeeder extends Seeder
         $bestsellerBadge = $badgeDefinitions->firstWhere('key', 'bestseller');
         if ($bestsellerBadge) {
             foreach ($categoryGroups as $categoryGroup) {
-                BadgeRule::create([
-                    'badge_definition_id' => $bestsellerBadge->id,
-                    'category_group_id' => $categoryGroup->id,
-                    'condition_type' => 'is_bestseller',
-                    'condition_config' => [
-                        'field' => 'is_bestseller',
-                        'operator' => '=',
-                        'value' => true,
-                    ],
-                    'priority' => 10,
-                    'is_active' => true,
-                ]);
+                BadgeRule::updateOrCreate(
+                    ['badge_definition_id' => $bestsellerBadge->id, 'category_group_id' => $categoryGroup->id],
+                    [
+                        'condition_type' => 'is_bestseller',
+                        'condition_config' => [
+                            'field' => 'is_bestseller',
+                            'operator' => '=',
+                            'value' => true,
+                        ],
+                        'priority' => 10,
+                        'is_active' => true,
+                    ]
+                );
             }
         }
 
@@ -42,18 +43,19 @@ class BadgeRuleSeeder extends Seeder
         $newBadge = $badgeDefinitions->firstWhere('key', 'new');
         if ($newBadge) {
             foreach ($categoryGroups as $categoryGroup) {
-                BadgeRule::create([
-                    'badge_definition_id' => $newBadge->id,
-                    'category_group_id' => $categoryGroup->id,
-                    'condition_type' => 'is_new',
-                    'condition_config' => [
-                        'field' => 'is_new',
-                        'operator' => '=',
-                        'value' => true,
-                    ],
-                    'priority' => 9,
-                    'is_active' => true,
-                ]);
+                BadgeRule::updateOrCreate(
+                    ['badge_definition_id' => $newBadge->id, 'category_group_id' => $categoryGroup->id],
+                    [
+                        'condition_type' => 'is_new',
+                        'condition_config' => [
+                            'field' => 'is_new',
+                            'operator' => '=',
+                            'value' => true,
+                        ],
+                        'priority' => 9,
+                        'is_active' => true,
+                    ]
+                );
             }
         }
 
@@ -61,18 +63,19 @@ class BadgeRuleSeeder extends Seeder
         $discountBadge = $badgeDefinitions->firstWhere('key', 'discount');
         if ($discountBadge) {
             foreach ($categoryGroups as $categoryGroup) {
-                BadgeRule::create([
-                    'badge_definition_id' => $discountBadge->id,
-                    'category_group_id' => $categoryGroup->id,
-                    'condition_type' => 'price_discount',
-                    'condition_config' => [
-                        'field' => 'discount_percentage',
-                        'operator' => '>=',
-                        'value' => 20, // %20 ve üzeri indirim
-                    ],
-                    'priority' => 8,
-                    'is_active' => true,
-                ]);
+                BadgeRule::updateOrCreate(
+                    ['badge_definition_id' => $discountBadge->id, 'category_group_id' => $categoryGroup->id],
+                    [
+                        'condition_type' => 'price_discount',
+                        'condition_config' => [
+                            'field' => 'discount_percentage',
+                            'operator' => '>=',
+                            'value' => 20, // %20 ve üzeri indirim
+                        ],
+                        'priority' => 8,
+                        'is_active' => true,
+                    ]
+                );
             }
         }
 
@@ -80,18 +83,19 @@ class BadgeRuleSeeder extends Seeder
         $highRatingBadge = $badgeDefinitions->firstWhere('key', 'high_rating');
         if ($highRatingBadge) {
             foreach ($categoryGroups as $categoryGroup) {
-                BadgeRule::create([
-                    'badge_definition_id' => $highRatingBadge->id,
-                    'category_group_id' => $categoryGroup->id,
-                    'condition_type' => 'rating',
-                    'condition_config' => [
-                        'field' => 'rating',
-                        'operator' => '>=',
-                        'value' => 4.5,
-                    ],
-                    'priority' => 7,
-                    'is_active' => true,
-                ]);
+                BadgeRule::updateOrCreate(
+                    ['badge_definition_id' => $highRatingBadge->id, 'category_group_id' => $categoryGroup->id],
+                    [
+                        'condition_type' => 'rating',
+                        'condition_config' => [
+                            'field' => 'rating',
+                            'operator' => '>=',
+                            'value' => 4.5,
+                        ],
+                        'priority' => 7,
+                        'is_active' => true,
+                    ]
+                );
             }
         }
 
@@ -99,18 +103,19 @@ class BadgeRuleSeeder extends Seeder
         $popularBadge = $badgeDefinitions->firstWhere('key', 'popular');
         if ($popularBadge) {
             foreach ($categoryGroups as $categoryGroup) {
-                BadgeRule::create([
-                    'badge_definition_id' => $popularBadge->id,
-                    'category_group_id' => $categoryGroup->id,
-                    'condition_type' => 'review_count',
-                    'condition_config' => [
-                        'field' => 'reviews_count',
-                        'operator' => '>=',
-                        'value' => 100,
-                    ],
-                    'priority' => 6,
-                    'is_active' => true,
-                ]);
+                BadgeRule::updateOrCreate(
+                    ['badge_definition_id' => $popularBadge->id, 'category_group_id' => $categoryGroup->id],
+                    [
+                        'condition_type' => 'review_count',
+                        'condition_config' => [
+                            'field' => 'reviews_count',
+                            'operator' => '>=',
+                            'value' => 100,
+                        ],
+                        'priority' => 6,
+                        'is_active' => true,
+                    ]
+                );
             }
         }
 

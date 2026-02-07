@@ -61,7 +61,10 @@ class CampaignSeeder extends Seeder
         ];
 
         foreach ($campaigns as $campaign) {
-            Campaign::create($campaign);
+            Campaign::updateOrCreate(
+                ['slug' => $campaign['slug']],
+                $campaign
+            );
         }
     }
 }

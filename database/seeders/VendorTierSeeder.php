@@ -61,7 +61,10 @@ class VendorTierSeeder extends Seeder
         ];
 
         foreach ($tiers as $tier) {
-            VendorTier::create($tier);
+            VendorTier::updateOrCreate(
+                ['name' => $tier['name']],
+                $tier
+            );
         }
     }
 }

@@ -25,15 +25,17 @@ class VendorScoreSeeder extends Seeder
 
             $totalScore = ($deliveryScore + $ratingScore + $stockScore + $supportScore) / 4;
 
-            VendorScore::create([
-                'vendor_id' => $vendor->id,
-                'total_score' => round($totalScore, 2),
-                'delivery_score' => $deliveryScore,
-                'rating_score' => $ratingScore,
-                'stock_score' => $stockScore,
-                'support_score' => $supportScore,
-                'created_at' => now()->subDays(rand(1, 30)),
-            ]);
+            VendorScore::updateOrCreate(
+                ['vendor_id' => $vendor->id],
+                [
+                    'total_score' => round($totalScore, 2),
+                    'delivery_score' => $deliveryScore,
+                    'rating_score' => $ratingScore,
+                    'stock_score' => $stockScore,
+                    'support_score' => $supportScore,
+                    'created_at' => now()->subDays(rand(1, 30)),
+                ]
+            );
         }
     }
 }

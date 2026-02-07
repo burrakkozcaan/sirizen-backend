@@ -33,23 +33,24 @@ class WishlistSeeder extends Seeder
             $listCount = rand(1, 3);
 
             for ($i = 0; $i < $listCount; $i++) {
-                $wishlist = Wishlist::create([
-                    'user_id' => $customer->id,
-                    'name' => fake()->randomElement($wishlistNames) . ' ' . ($i + 1),
-                    'created_at' => now()->subDays(rand(1, 60)),
-                ]);
+                $wishlistName = fake()->randomElement($wishlistNames) . ' ' . ($i + 1);
+                $wishlist = Wishlist::firstOrCreate(
+                    ['user_id' => $customer->id, 'name' => $wishlistName],
+                    ['created_at' => now()->subDays(rand(1, 60))]
+                );
 
                 // Her listeye 1-5 ürün ekle
                 $itemCount = rand(1, min(5, $products->count()));
                 $selectedProducts = $products->random($itemCount);
 
                 foreach ($selectedProducts as $product) {
-                    DB::table('wishlist_items')->insert([
-                        'wishlist_id' => $wishlist->id,
-                        'product_id' => $product->id,
-                        'created_at' => now()->subDays(rand(1, 30)),
-                        'updated_at' => now(),
-                    ]);
+                    DB::table('wishlist_items')->updateOrInsert(
+                        ['wishlist_id' => $wishlist->id, 'product_id' => $product->id],
+                        [
+                            'created_at' => now()->subDays(rand(1, 30)),
+                            'updated_at' => now(),
+                        ]
+                    );
                 }
             }
         }

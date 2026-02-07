@@ -40,14 +40,18 @@ class ProductReviewSeeder extends Seeder
 
                 $reviewData = $reviews[array_rand($reviews)];
 
-                ProductReview::create([
-                    'product_id' => $product->id,
-                    'user_id' => $customers[$i]->id,
-                    'rating' => $reviewData['rating'],
-                    'comment' => $reviewData['comment'],
-                    'is_verified_purchase' => rand(0, 1) == 1,
-                    'created_at' => now()->subDays(rand(1, 30)),
-                ]);
+                ProductReview::updateOrCreate(
+                    [
+                        'product_id' => $product->id,
+                        'user_id' => $customers[$i]->id,
+                    ],
+                    [
+                        'rating' => $reviewData['rating'],
+                        'comment' => $reviewData['comment'],
+                        'is_verified_purchase' => rand(0, 1) == 1,
+                        'created_at' => now()->subDays(rand(1, 30)),
+                    ]
+                );
             }
         }
     }
