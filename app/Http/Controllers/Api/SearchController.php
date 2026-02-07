@@ -38,14 +38,14 @@ class SearchController extends Controller
             ->with(['vendor', 'category', 'brand', 'images'])
             ->where('is_active', true)
             ->where(function ($q) use ($query) {
-                $q->where('name', 'ILIKE', "%{$query}%")
-                    ->orWhere('description', 'ILIKE', "%{$query}%")
-                    ->orWhere('tags', 'ILIKE', "%{$query}%")
+                $q->where('name', 'LIKE', "%{$query}%")
+                    ->orWhere('description', 'LIKE', "%{$query}%")
+                    ->orWhere('tags', 'LIKE', "%{$query}%")
                     ->orWhereHas('category', function ($categoryQuery) use ($query) {
-                        $categoryQuery->where('name', 'ILIKE', "%{$query}%");
+                        $categoryQuery->where('name', 'LIKE', "%{$query}%");
                     })
                     ->orWhereHas('brand', function ($brandQuery) use ($query) {
-                        $brandQuery->where('name', 'ILIKE', "%{$query}%");
+                        $brandQuery->where('name', 'LIKE', "%{$query}%");
                     });
             });
 
@@ -54,7 +54,7 @@ class SearchController extends Controller
 
         if ($sortBy === 'relevance') {
             // Simple relevance: prioritize name matches
-            $products->orderByRaw("CASE WHEN name ILIKE ? THEN 0 ELSE 1 END", ["%{$query}%"]);
+            $products->orderByRaw("CASE WHEN name LIKE ? THEN 0 ELSE 1 END", ["%{$query}%"]);
         } else {
             $sortOrder = $request->input('sort_order', 'desc');
             $allowedSorts = ['price', 'rating', 'sales_count', 'created_at'];
