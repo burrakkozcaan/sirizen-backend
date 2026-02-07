@@ -3,169 +3,155 @@
 namespace Database\Seeders;
 
 use App\Models\AttributeSet;
+use App\Models\CategoryGroup;
 use Illuminate\Database\Seeder;
 
 class AttributeSetSeeder extends Seeder
 {
     public function run(): void
     {
+        // Pre-load category group IDs by key for dynamic lookups
+        $groupIds = CategoryGroup::pluck('id', 'key');
+
         $sets = [
-            // Giyim (category_group_id: 1)
+            // Giyim
             [
-                'id' => 1,
                 'key' => 'kadin-giyim',
                 'name' => 'Kadın Giyim',
-                'category_group_id' => 1,
+                'category_group_id' => $groupIds['giyim'],
                 'description' => 'Kadın giyim ürünleri için özellik seti',
                 'is_active' => true,
             ],
             [
-                'id' => 2,
                 'key' => 'erkek-giyim',
                 'name' => 'Erkek Giyim',
-                'category_group_id' => 1,
+                'category_group_id' => $groupIds['giyim'],
                 'description' => 'Erkek giyim ürünleri için özellik seti',
                 'is_active' => true,
             ],
             [
-                'id' => 3,
                 'key' => 'dis-giyim',
                 'name' => 'Dış Giyim',
-                'category_group_id' => 1,
+                'category_group_id' => $groupIds['giyim'],
                 'description' => 'Mont, kaban, ceket için özellik seti',
                 'is_active' => true,
             ],
 
-            // Elektronik (category_group_id: 2)
+            // Elektronik
             [
-                'id' => 4,
                 'key' => 'telefon',
                 'name' => 'Cep Telefonu',
-                'category_group_id' => 2,
+                'category_group_id' => $groupIds['elektronik'],
                 'description' => 'Cep telefonu ürünleri için özellik seti',
                 'is_active' => true,
             ],
             [
-                'id' => 5,
                 'key' => 'bilgisayar',
                 'name' => 'Bilgisayar',
-                'category_group_id' => 2,
+                'category_group_id' => $groupIds['elektronik'],
                 'description' => 'Bilgisayar ürünleri için özellik seti',
                 'is_active' => true,
             ],
             [
-                'id' => 6,
                 'key' => 'tv-ses',
                 'name' => 'TV & Ses Sistemleri',
-                'category_group_id' => 2,
+                'category_group_id' => $groupIds['elektronik'],
                 'description' => 'TV ve ses sistemleri için özellik seti',
                 'is_active' => true,
             ],
 
-            // Kozmetik (category_group_id: 3)
+            // Kozmetik
             [
-                'id' => 7,
                 'key' => 'makyaj',
                 'name' => 'Makyaj Ürünleri',
-                'category_group_id' => 3,
+                'category_group_id' => $groupIds['kozmetik'],
                 'description' => 'Makyaj ürünleri için özellik seti',
                 'is_active' => true,
             ],
             [
-                'id' => 8,
                 'key' => 'cilt-bakimi',
                 'name' => 'Cilt Bakım',
-                'category_group_id' => 3,
+                'category_group_id' => $groupIds['kozmetik'],
                 'description' => 'Cilt bakım ürünleri için özellik seti',
                 'is_active' => true,
             ],
             [
-                'id' => 9,
                 'key' => 'parfum',
                 'name' => 'Parfüm',
-                'category_group_id' => 3,
+                'category_group_id' => $groupIds['kozmetik'],
                 'description' => 'Parfüm ürünleri için özellik seti',
                 'is_active' => true,
             ],
 
-            // Ev & Yaşam (category_group_id: 4)
+            // Ev & Yaşam
             [
-                'id' => 10,
                 'key' => 'mobilya',
                 'name' => 'Mobilya',
-                'category_group_id' => 4,
+                'category_group_id' => $groupIds['ev-yasam'],
                 'description' => 'Mobilya ürünleri için özellik seti',
                 'is_active' => true,
             ],
             [
-                'id' => 11,
                 'key' => 'ev-tekstili',
                 'name' => 'Ev Tekstili',
-                'category_group_id' => 4,
+                'category_group_id' => $groupIds['ev-yasam'],
                 'description' => 'Ev tekstili ürünleri için özellik seti',
                 'is_active' => true,
             ],
 
-            // Spor (category_group_id: 5)
+            // Spor
             [
-                'id' => 12,
                 'key' => 'spor-giyim',
                 'name' => 'Spor Giyim',
-                'category_group_id' => 5,
+                'category_group_id' => $groupIds['spor'],
                 'description' => 'Spor giyim ürünleri için özellik seti',
                 'is_active' => true,
             ],
             [
-                'id' => 13,
                 'key' => 'spor-ekipman',
                 'name' => 'Spor Ekipmanları',
-                'category_group_id' => 5,
+                'category_group_id' => $groupIds['spor'],
                 'description' => 'Spor ekipmanları için özellik seti',
                 'is_active' => true,
             ],
 
-            // Ayakkabı & Çanta (category_group_id: 6)
+            // Ayakkabı & Çanta
             [
-                'id' => 14,
                 'key' => 'ayakkabi',
                 'name' => 'Ayakkabı',
-                'category_group_id' => 6,
+                'category_group_id' => $groupIds['ayakkabi-canta'],
                 'description' => 'Ayakkabı ürünleri için özellik seti',
                 'is_active' => true,
             ],
             [
-                'id' => 15,
                 'key' => 'canta',
                 'name' => 'Çanta',
-                'category_group_id' => 6,
+                'category_group_id' => $groupIds['ayakkabi-canta'],
                 'description' => 'Çanta ürünleri için özellik seti',
                 'is_active' => true,
             ],
 
-            // Anne & Çocuk (category_group_id: 7)
+            // Anne & Çocuk
             [
-                'id' => 16,
                 'key' => 'bebek-giyim',
                 'name' => 'Bebek Giyim',
-                'category_group_id' => 7,
+                'category_group_id' => $groupIds['anne-cocuk'],
                 'description' => 'Bebek giyim ürünleri için özellik seti',
                 'is_active' => true,
             ],
             [
-                'id' => 17,
                 'key' => 'oyuncak',
                 'name' => 'Oyuncak',
-                'category_group_id' => 7,
+                'category_group_id' => $groupIds['anne-cocuk'],
                 'description' => 'Oyuncak ürünleri için özellik seti',
                 'is_active' => true,
             ],
 
-            // Süpermarket (category_group_id: 8)
+            // Süpermarket
             [
-                'id' => 18,
                 'key' => 'gida',
                 'name' => 'Gıda Ürünleri',
-                'category_group_id' => 8,
+                'category_group_id' => $groupIds['supermarket'],
                 'description' => 'Gıda ürünleri için özellik seti',
                 'is_active' => true,
             ],
@@ -173,7 +159,7 @@ class AttributeSetSeeder extends Seeder
 
         foreach ($sets as $set) {
             AttributeSet::updateOrCreate(
-                ['id' => $set['id']],
+                ['key' => $set['key']],
                 $set
             );
         }

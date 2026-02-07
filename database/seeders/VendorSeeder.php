@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\Vendor;
 use App\UserRole;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class VendorSeeder extends Seeder
@@ -16,7 +15,6 @@ class VendorSeeder extends Seeder
     {
         $vendors = [
             [
-                'id' => 1,
                 'name' => 'Koton',
                 'slug' => 'koton',
                 'logo' => 'https://cdn.dsmcdn.com/ty11/seller/logo/koton/koton_1598857541927.jpg',
@@ -34,7 +32,6 @@ class VendorSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 2,
                 'name' => 'LC Waikiki',
                 'slug' => 'lc-waikiki',
                 'logo' => 'https://cdn.dsmcdn.com/ty11/seller/logo/lcwaikiki/lcwaikiki_1598857541927.jpg',
@@ -52,7 +49,6 @@ class VendorSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 3,
                 'name' => 'Nike',
                 'slug' => 'nike',
                 'logo' => 'https://cdn.dsmcdn.com/ty11/seller/logo/nike/nike_1598857541927.jpg',
@@ -70,7 +66,6 @@ class VendorSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 4,
                 'name' => 'Zara',
                 'slug' => 'zara',
                 'logo' => 'https://cdn.dsmcdn.com/ty11/seller/logo/zara/zara_1598857541927.jpg',
@@ -88,7 +83,6 @@ class VendorSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 5,
                 'name' => 'Mavi',
                 'slug' => 'mavi',
                 'logo' => 'https://cdn.dsmcdn.com/ty11/seller/logo/mavi/mavi_1598857541927.jpg',
@@ -136,13 +130,12 @@ class VendorSeeder extends Seeder
             Vendor::updateOrCreate(
                 ['slug' => $vendorData['slug']],
                 [
-                    'id' => $vendorData['id'],
                     'user_id' => $user->id,
                     'tier_id' => $tierId,
                     'name' => $vendorData['name'],
                     'description' => $vendorData['description'],
                     'company_type' => $companyType->value,
-                    'tax_number' => '12345678'.str_pad((string) $vendorData['id'], 2, '0', STR_PAD_LEFT),
+                    'tax_number' => '12345678'.str_pad((string) crc32($vendorData['slug']), 2, '0', STR_PAD_LEFT),
                     'city' => ['İstanbul', 'Ankara', 'İzmir'][array_rand(['İstanbul', 'Ankara', 'İzmir'])],
                     'district' => ['Kadıköy', 'Çankaya', 'Karşıyaka'][array_rand(['Kadıköy', 'Çankaya', 'Karşıyaka'])],
                     'rating' => $vendorData['rating'],
@@ -157,12 +150,5 @@ class VendorSeeder extends Seeder
             );
         }
 
-        if (DB::getDriverName() !== 'pgsql') {
-            return;
-        }
-
-        DB::statement(
-            "SELECT setval(pg_get_serial_sequence('vendors', 'id'), (SELECT COALESCE(MAX(id), 0) FROM vendors))"
-        );
     }
 }

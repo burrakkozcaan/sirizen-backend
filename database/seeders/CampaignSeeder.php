@@ -11,7 +11,6 @@ class CampaignSeeder extends Seeder
     {
         $campaigns = [
             [
-                'id' => 1,
                 'title' => 'Kış İndirimi',
                 'slug' => 'kis-indirimi',
                 'description' => 'Sezon sonu büyük indirim! %50\'ye varan fırsatlar.',
@@ -23,7 +22,6 @@ class CampaignSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 2,
                 'title' => 'Ayakkabı Festivali',
                 'slug' => 'ayakkabi-festivali',
                 'description' => 'Tüm ayakkabılarda %30 indirim!',
@@ -35,7 +33,6 @@ class CampaignSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 3,
                 'title' => 'Elektronik Fırsatları',
                 'slug' => 'elektronik-firsatlari',
                 'description' => 'Elektronik ürünlerde kaçırılmayacak fiyatlar!',
@@ -47,7 +44,6 @@ class CampaignSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 4,
                 'title' => 'Kozmetik Günleri',
                 'slug' => 'kozmetik-gunleri',
                 'description' => 'En sevilen kozmetik markaları indirimde!',

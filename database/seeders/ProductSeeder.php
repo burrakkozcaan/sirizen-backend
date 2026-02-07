@@ -26,7 +26,6 @@ class ProductSeeder extends Seeder
         $products = [
             [
                 ...$defaultSafetyInfo,
-                'id' => 1,
                 'brand_id' => 1,
                 'category_id' => 11,
                 'title' => 'Kadın Oversize Basic T-Shirt',
@@ -55,7 +54,6 @@ class ProductSeeder extends Seeder
             ],
             [
                 ...$defaultSafetyInfo,
-                'id' => 2,
                 'brand_id' => 5,
                 'category_id' => 21,
                 'title' => 'Erkek Slim Fit Jean Pantolon',
@@ -84,7 +82,6 @@ class ProductSeeder extends Seeder
             ],
             [
                 ...$defaultSafetyInfo,
-                'id' => 3,
                 'brand_id' => 3,
                 'category_id' => 92,
                 'title' => 'Nike Air Max 270 Spor Ayakkabı',
@@ -114,7 +111,6 @@ class ProductSeeder extends Seeder
             ],
             [
                 ...$defaultSafetyInfo,
-                'id' => 4,
                 'brand_id' => 4,
                 'category_id' => 13,
                 'title' => 'Kadın Deri Omuz Çantası',
@@ -151,7 +147,7 @@ class ProductSeeder extends Seeder
             );
 
             $product = Product::updateOrCreate(
-                ['id' => $productData['id']],
+                ['slug' => $productData['slug']],
                 $productData
             );
 

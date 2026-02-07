@@ -11,7 +11,6 @@ class CategoryGroupSeeder extends Seeder
     {
         $groups = [
             [
-                'id' => 1,
                 'key' => 'giyim',
                 'name' => 'Giyim',
                 'icon' => 'shirt',
@@ -24,7 +23,6 @@ class CategoryGroupSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 2,
                 'key' => 'elektronik',
                 'name' => 'Elektronik',
                 'icon' => 'smartphone',
@@ -36,7 +34,6 @@ class CategoryGroupSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 3,
                 'key' => 'kozmetik',
                 'name' => 'Kozmetik',
                 'icon' => 'sparkles',
@@ -48,7 +45,6 @@ class CategoryGroupSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 4,
                 'key' => 'ev-yasam',
                 'name' => 'Ev & Yaşam',
                 'icon' => 'home',
@@ -60,7 +56,6 @@ class CategoryGroupSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 5,
                 'key' => 'spor',
                 'name' => 'Spor & Outdoor',
                 'icon' => 'dumbbell',
@@ -72,7 +67,6 @@ class CategoryGroupSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 6,
                 'key' => 'ayakkabi-canta',
                 'name' => 'Ayakkabı & Çanta',
                 'icon' => 'shopping-bag',
@@ -84,7 +78,6 @@ class CategoryGroupSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 7,
                 'key' => 'anne-cocuk',
                 'name' => 'Anne & Çocuk',
                 'icon' => 'baby',
@@ -96,7 +89,6 @@ class CategoryGroupSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'id' => 8,
                 'key' => 'supermarket',
                 'name' => 'Süpermarket',
                 'icon' => 'shopping-cart',
@@ -111,7 +103,7 @@ class CategoryGroupSeeder extends Seeder
 
         foreach ($groups as $group) {
             CategoryGroup::updateOrCreate(
-                ['id' => $group['id']],
+                ['key' => $group['key']],
                 $group
             );
         }
