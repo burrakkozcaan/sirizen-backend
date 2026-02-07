@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\ProductQuestionController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\QuickLinkController;
 use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\Api\SearchTagController;
 use App\Http\Controllers\Api\SellerController;
 use App\Http\Controllers\Api\SimilarProductsController;
 use App\Http\Controllers\Api\VendorController;
@@ -157,6 +158,9 @@ Route::prefix('campaigns')->group(function () {
 
 // Quick Links
 Route::get('/quick-links', [QuickLinkController::class, 'index']);     // GET /api/quick-links
+
+// Search Tags
+Route::get('/search-tags', [SearchTagController::class, 'index']);     // GET /api/search-tags
 
 // Home Engine (Dynamic Homepage Sections)
 Route::get('/home', [HomeController::class, 'index']);                  // GET /api/home

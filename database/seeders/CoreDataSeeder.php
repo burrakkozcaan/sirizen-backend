@@ -52,6 +52,9 @@ class CoreDataSeeder extends Seeder
             // Quick links
             QuickLinkSeeder::class,
 
+            // Search tags (homepage "Bunlar da İlginizi Çekebilir")
+            SearchTagSeeder::class,
+
             // Campaigns (hero banners)
             CampaignSeeder::class,
 
