@@ -54,6 +54,10 @@ class CoreDataSeeder extends Seeder
 
             // Campaigns (hero banners)
             CampaignSeeder::class,
+
+            // Demo vendors and products (minimal)
+            VendorSeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }
