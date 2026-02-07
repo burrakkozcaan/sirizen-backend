@@ -1,2 +1,11 @@
+[phases.build]
+cmds = [
+    "npm run build",
+    "chmod -R 775 /app/storage /app/bootstrap/cache",
+    "chown -R www-data:www-data /app/storage /app/bootstrap/cache",
+    "composer install --optimize-autoloader --no-dev",
+    "php artisan optimize:clear",
+]
+
 [start]
 cmd = "bash -c 'PORT=${PORT:-80} && sed \"s/{{PORT}}/$PORT/g\" /app/.nixpacks/nginx.template.conf > /nginx.conf && supervisord -c /supervisord.conf'"
