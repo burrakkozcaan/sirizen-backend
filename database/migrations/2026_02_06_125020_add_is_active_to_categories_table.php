@@ -17,11 +17,15 @@ return new class extends Migration
             }
         });
 
-        // Add composite index now that is_active exists
+        // Add composite index now that is_active exists (skip if already exists)
         if (Schema::hasColumn('categories', 'category_group_id')) {
-            Schema::table('categories', function (Blueprint $table) {
-                $table->index(['category_group_id', 'is_active']);
-            });
+            try {
+                Schema::table('categories', function (Blueprint $table) {
+                    $table->index(['category_group_id', 'is_active']);
+                });
+            } catch (\Exception $e) {
+                // Index already exists, skip
+            }
         }
     }
 
