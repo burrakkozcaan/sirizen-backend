@@ -42,10 +42,6 @@
         @viteReactRefresh
         @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
         @inertiaHead
-        
-        <!-- Zoho SalesIQ -->
-        <script>window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}</script>
-        <script id="zsiqscript" src="https://salesiq.zohopublic.eu/widget?wc=siq5a8e418a94515ec63af2ed337ededeec9bb26b1bc8724f5c925b207b2d628c4c" defer></script>
     </head>
     <body class="font-sans antialiased">
         @inertia

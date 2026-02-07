@@ -8,6 +8,7 @@ use App\Services\Cargo\CargoProviderFactory;
 use App\Services\Cargo\CargoService;
 use App\Services\Payment\PaymentGatewayFactory;
 use App\Services\Payment\PaymentService;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -43,6 +44,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (app()->environment('production')) {
+            URL::forceScheme('https');
+        }
+
         if (config('livewire.temporary_file_upload.disk') === null) {
             config(['livewire.temporary_file_upload.disk' => 'local']);
         }
