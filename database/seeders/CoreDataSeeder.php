@@ -51,6 +51,9 @@ class CoreDataSeeder extends Seeder
 
             // Quick links
             QuickLinkSeeder::class,
+
+            // Campaigns (hero banners)
+            CampaignSeeder::class,
         ]);
     }
 }

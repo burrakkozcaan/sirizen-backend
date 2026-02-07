@@ -56,6 +56,10 @@ class CategoryController extends Controller
      */
     public function show(Request $request, string $slug): JsonResponse
     {
+        if ($slug === 'main') {
+            return $this->index();
+        }
+
         $category = Category::with(['children.children', 'categoryGroup'])
             ->where('slug', $slug)
             ->first();
