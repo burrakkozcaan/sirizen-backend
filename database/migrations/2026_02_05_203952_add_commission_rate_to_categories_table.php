@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('categories', function (Blueprint $table) {
             $table->decimal('commission_rate', 5, 2)
                 ->nullable()
-                ->after('is_active')
+                ->after('order')
                 ->comment('Kategori bazlı komisyon oranı (%)');
         });
     }

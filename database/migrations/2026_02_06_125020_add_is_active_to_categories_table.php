@@ -16,6 +16,13 @@ return new class extends Migration
                 $table->boolean('is_active')->default(true)->after('order');
             }
         });
+
+        // Add composite index now that is_active exists
+        if (Schema::hasColumn('categories', 'category_group_id')) {
+            Schema::table('categories', function (Blueprint $table) {
+                $table->index(['category_group_id', 'is_active']);
+            });
+        }
     }
 
     /**

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('categories', function (Blueprint $table) {
             $table->foreignId('category_group_id')->nullable()->after('parent_id')->constrained()->nullOnDelete();
-            $table->index(['category_group_id', 'is_active']);
+            $table->index('category_group_id');
         });
 
         Schema::table('products', function (Blueprint $table) {
