@@ -18,12 +18,14 @@ class ProductQuestion extends Model
         'question',
         'answer',
         'answered_by_vendor',
+        'is_approved',
     ];
 
     protected function casts(): array
     {
         return [
             'answered_by_vendor' => 'boolean',
+            'is_approved' => 'boolean',
         ];
     }
 
