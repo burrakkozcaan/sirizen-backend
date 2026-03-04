@@ -57,10 +57,8 @@ class CoreDataSeeder extends Seeder
 
             // Campaigns (hero banners)
             CampaignSeeder::class,
-
-            // Demo vendors and products (minimal)
-            VendorSeeder::class,
-            ProductSeeder::class,
         ]);
+        // NOT: Gerçek satıcı ve ürün verisi DemoSeeder'da bulunur (sadece local/staging).
+        // Production'da satıcılar /api/auth/vendor/register üzerinden kayıt olur.
     }
 }

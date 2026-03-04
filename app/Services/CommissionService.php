@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\CommissionStatus;
 use App\Models\Category;
 use App\Models\Commission;
 use App\Models\OrderItem;
@@ -95,11 +96,14 @@ class CommissionService
         // Komisyon oranını hesapla
         $commissionRate = $this->calculateCommissionRate($product, $vendor, $category);
 
-        // Komisyon tutarını hesapla
-        $grossAmount = $orderItem->price * $orderItem->quantity;
+        // Komisyon tutarını hesapla (DB'den gelen değerler string/numeric olabilir)
+        // price = toplam satır tutarı (unit_price × quantity), unit_price üzerinden KDV hesapla
+        $unitPrice   = (float) ($orderItem->unit_price ?? $orderItem->price);
+        $quantity    = (int) $orderItem->quantity;
+        $grossAmount = (float) $orderItem->price; // Zaten toplam tutar
         $commissionAmount = $this->calculateCommissionAmount(
-            $orderItem->price,
-            $orderItem->quantity,
+            $unitPrice,
+            $quantity,
             $commissionRate
         );
 
@@ -116,7 +120,7 @@ class CommissionService
             'commission_amount' => $commissionAmount,
             'net_amount' => $netAmount,
             'currency' => 'TRY',
-            'status' => 'pending', // pending, paid, refunded
+            'status' => CommissionStatus::PENDING,
         ]);
 
         Log::info('Commission created', [
@@ -147,7 +151,7 @@ class CommissionService
     {
         // Ödeme başarılı olduğunda komisyon durumunu güncelle
         $commission->update([
-            'status' => 'paid',
+            'status' => CommissionStatus::PAID,
         ]);
 
         // Vendor'a ödeme yapılacak tutarı kaydet
@@ -168,7 +172,9 @@ class CommissionService
         
         $commission->update([
             'refunded_amount' => $refundedAmount,
-            'status' => $refundedAmount >= $commission->commission_amount ? 'refunded' : 'partially_refunded',
+            'status' => $refundedAmount >= $commission->commission_amount
+                ? CommissionStatus::REFUNDED
+                : CommissionStatus::PARTIALLY_REFUNDED,
         ]);
 
         Log::info('Commission refunded', [

@@ -1,9 +1,12 @@
 <?php
 
+use App\CommissionStatus;
+use App\Models\Category;
 use App\Models\Commission;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
+use App\Models\Product;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Models\VendorBalance;
@@ -101,22 +104,22 @@ describe('Commission Calculation', function () {
         expect($commission->vendor_id)->toBe($this->vendor->id);
         expect((float) $commission->gross_amount)->toBe(200.0);
 
-        // Default rate is 10%
+        // Default rate is 10%; commission is KDV-excluded: round((100*2/1.20)*0.10, 2) = 16.67
         $defaultRate = config('payment.commission.default_rate', 10.0);
         expect((float) $commission->commission_rate)->toBe($defaultRate);
-        expect((float) $commission->commission_amount)->toBe(20.0);
-        expect((float) $commission->net_amount)->toBe(180.0);
+        expect((float) $commission->commission_amount)->toBe(16.67);
+        expect((float) $commission->net_amount)->toBe(183.33);
 
         // Check vendor balance was updated
         $balance = VendorBalance::where('vendor_id', $this->vendor->id)->first();
         expect($balance)->not->toBeNull();
-        expect((float) $balance->pending_balance)->toBe(180.0);
-        expect((float) $balance->total_earnings)->toBe(180.0);
+        expect((float) $balance->pending_balance)->toBe(183.33);
+        expect((float) $balance->total_earnings)->toBe(183.33);
 
         // Check payment was updated
         $this->payment->refresh();
-        expect((float) $this->payment->commission_amount)->toBe(20.0);
-        expect((float) $this->payment->vendor_amount)->toBe(180.0);
+        expect((float) $this->payment->commission_amount)->toBe(16.67);
+        expect((float) $this->payment->vendor_amount)->toBe(183.33);
         expect($this->payment->split_status)->toBe('settled');
     });
 
@@ -141,14 +144,14 @@ describe('Commission Calculation', function () {
         $commissions = Commission::where('payment_id', $this->payment->id)->get();
         expect($commissions)->toHaveCount(2);
 
-        // Both use default 10% rate
-        // Vendor 1: 200 * 10% = 20 commission, 180 net
+        // Both use default 10% rate (KDV-excluded)
+        // Vendor 1: unit_price=100, qty=2 → round((200/1.20)*0.10, 2) = 16.67
         $commission1 = $commissions->where('vendor_id', $this->vendor->id)->first();
-        expect((float) $commission1->commission_amount)->toBe(20.0);
+        expect((float) $commission1->commission_amount)->toBe(16.67);
 
-        // Vendor 2: 50 * 10% = 5 commission, 45 net
+        // Vendor 2: unit_price=50, qty=1 → round((50/1.20)*0.10, 2) = 4.17
         $commission2 = $commissions->where('vendor_id', $vendor2->id)->first();
-        expect((float) $commission2->commission_amount)->toBe(5.0);
+        expect((float) $commission2->commission_amount)->toBe(4.17);
     });
 });
 
@@ -193,7 +196,7 @@ describe('Commission Refund', function () {
 
         // Check commission was marked as refunded
         $commission = Commission::where('payment_id', $this->payment->id)->first();
-        expect($commission->status)->toBe('refunded');
+        expect($commission->status)->toBe(CommissionStatus::REFUNDED);
 
         // Check vendor balance was reduced
         $balance = VendorBalance::where('vendor_id', $this->vendor->id)->first();

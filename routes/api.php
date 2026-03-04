@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AddressController;
+use App\Http\Controllers\Api\VendorDashboardController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BlockController;
 use App\Http\Controllers\Api\SocialAuthController;
@@ -254,6 +255,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('product-questions')->group(function () {
         Route::get('/', [ProductQuestionController::class, 'index']); // GET /api/product-questions (user's questions)
         Route::post('/', [ProductQuestionController::class, 'store']); // POST /api/product-questions (ask a question)
+    });
+
+    // Vendor Dashboard
+    Route::prefix('vendor/me')->middleware('auth:sanctum')->group(function () {
+        Route::get('/balance', [VendorDashboardController::class, 'balance']);           // GET /api/vendor/me/balance
+        Route::get('/commissions', [VendorDashboardController::class, 'commissions']);   // GET /api/vendor/me/commissions
+        Route::get('/payouts', [VendorDashboardController::class, 'payouts']);           // GET /api/vendor/me/payouts
+        Route::post('/payout-request', [VendorDashboardController::class, 'requestPayout']); // POST /api/vendor/me/payout-request
     });
 
     // Checkout / Payment

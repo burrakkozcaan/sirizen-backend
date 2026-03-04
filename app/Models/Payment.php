@@ -94,4 +94,20 @@ class Payment extends Model
     {
         return in_array($this->status, [PaymentStatus::Refunded, PaymentStatus::PartiallyRefunded], true);
     }
+
+    /**
+     * Split tutarlarının doğru olup olmadığını kontrol et.
+     * commission_amount + vendor_amount = amount olmalı (tolerans: 1 kuruş)
+     */
+    public function isSplitValid(): bool
+    {
+        if (! $this->commission_amount || ! $this->vendor_amount) {
+            return true; // Henüz split yapılmamış, geçerli
+        }
+
+        $splitTotal = round((float) $this->commission_amount + (float) $this->vendor_amount, 2);
+        $amount     = round((float) $this->amount, 2);
+
+        return abs($splitTotal - $amount) <= 0.01;
+    }
 }

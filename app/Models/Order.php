@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 #[ObservedBy(OrderObserver::class)]
@@ -90,9 +91,12 @@ class Order extends Model
         return $this->hasMany(Dispute::class);
     }
 
-    public function payment(): BelongsTo
+    /**
+     * En son ödeme kaydı (genellikle tek ödeme olur)
+     */
+    public function payment(): HasOne
     {
-        return $this->belongsTo(Payment::class, 'id', 'order_id');
+        return $this->hasOne(Payment::class)->latestOfMany();
     }
 
     /**

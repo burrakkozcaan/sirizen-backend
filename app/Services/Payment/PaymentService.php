@@ -6,6 +6,7 @@ namespace App\Services\Payment;
 
 use App\Events\PaymentCompleted;
 use App\Events\PaymentFailed;
+use App\CommissionStatus;
 use App\Models\Commission;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -194,54 +195,59 @@ class PaymentService
 
     /**
      * Komisyon dağılımını hesapla ve kaydet
-     * NOT: Artık CommissionService kullanılıyor, bu metod deprecated
+     * Her order_item için komisyon kaydı oluşturur/günceller,
+     * payment split tutarlarını hesaplayarak payment'ı günceller.
      */
     public function settleCommission(Order $order, Payment $payment): void
     {
-        // CommissionService kullanarak komisyonları işle
         $commissionService = new \App\Services\CommissionService();
-        
-        foreach ($order->items as $item) {
-            // Komisyon kaydı zaten oluşturulmuşsa güncelle
-            $commission = \App\Models\Commission::where('order_item_id', $item->id)->first();
-            
-            if ($commission) {
-                $commission->update([
-                    'payment_id' => $payment->id,
-                    'status' => 'paid',
-                ]);
-                
-                $commissionService->processCommissionPayment($commission);
-            } else {
-                // Komisyon kaydı yoksa oluştur
-                $commissionService->createCommission($item);
-            }
-        }
 
-                // VendorBalance güncelle
-                if ($item->vendor_id) {
-                    $balance = VendorBalance::firstOrCreate(
-                        ['vendor_id' => $item->vendor_id],
-                        [
-                            'available_balance' => 0,
-                            'pending_balance' => 0,
-                            'total_earnings' => 0,
-                            'total_withdrawn' => 0,
-                            'currency' => $payment->currency ?? config('payment.currency', 'TRY'),
-                        ]
-                    );
+        $totalCommission = 0.0;
+        $totalVendorAmount = 0.0;
 
-                    $balance->increment('pending_balance', $vendorAmount);
-                    $balance->increment('total_earnings', $vendorAmount);
+        DB::transaction(function () use ($order, $payment, $commissionService, &$totalCommission, &$totalVendorAmount) {
+            foreach ($order->items as $item) {
+                $commission = \App\Models\Commission::where('order_item_id', $item->id)->first();
+
+                if ($commission) {
+                    $commission->update([
+                        'payment_id' => $payment->id,
+                        'status'     => CommissionStatus::PAID,
+                    ]);
+                } else {
+                    $commission = $commissionService->createCommission($item);
+                    $commission->update([
+                        'payment_id' => $payment->id,
+                        'status'     => CommissionStatus::PAID,
+                    ]);
                 }
+
+                $totalCommission    += (float) $commission->commission_amount;
+                $totalVendorAmount  += (float) $commission->net_amount;
+
+                // Vendor bakiyesini güncelle
+                $balance = VendorBalance::firstOrCreate(
+                    ['vendor_id' => $item->vendor_id],
+                    [
+                        'balance'           => 0,
+                        'available_balance' => 0,
+                        'pending_balance'   => 0,
+                        'total_earnings'    => 0,
+                        'total_withdrawn'   => 0,
+                        'currency'          => 'TRY',
+                    ]
+                );
+                $balance->increment('pending_balance', $commission->net_amount);
+                $balance->increment('total_earnings', $commission->net_amount);
             }
 
-            // Payment'a komisyon bilgilerini ekle
+            // Payment split tutarlarını güncelle
             $payment->update([
-                'commission_amount' => $totalCommission,
-                'vendor_amount' => $totalVendorAmount,
-                'platform_amount' => $totalCommission,
-                'split_status' => 'settled',
+                'commission_amount' => round($totalCommission, 2),
+                'vendor_amount'     => round($totalVendorAmount, 2),
+                'platform_amount'   => round($totalCommission, 2),
+                'split_status'      => 'settled',
+                'paid_at'           => now(),
             ]);
         });
     }
@@ -300,7 +306,7 @@ class PaymentService
             $refundVendorAmount = $commission->net_amount * $refundRatio;
 
             $commission->update([
-                'status' => 'refunded',
+                'status' => CommissionStatus::REFUNDED,
                 'refunded_amount' => $refundCommission,
             ]);
 

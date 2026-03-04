@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\CommissionStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,6 +35,7 @@ class Commission extends Model
             'net_amount' => 'decimal:2',
             'refunded_amount' => 'decimal:2',
             'settled_at' => 'datetime',
+            'status' => CommissionStatus::class,
         ];
     }
 

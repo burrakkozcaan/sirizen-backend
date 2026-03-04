@@ -54,5 +54,6 @@ class AppServiceProvider extends ServiceProvider
 
         // Register Vendor Observer
         Vendor::observe(VendorObserver::class);
+        // Event listeners are auto-discovered by Laravel (app/Listeners/)
     }
 }

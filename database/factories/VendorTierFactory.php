@@ -9,15 +9,17 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class VendorTierFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
-            //
+            'name'              => fake()->words(2, true),
+            'min_total_orders'  => 0,
+            'min_rating'        => 0,
+            'max_cancel_rate'   => 100,
+            'max_return_rate'   => 100,
+            'priority_boost'    => 0,
+            'badge_icon'        => null,
+            'commission_rate'   => null, // null = indirim yok
         ];
     }
 }

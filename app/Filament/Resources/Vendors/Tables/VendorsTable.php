@@ -54,6 +54,42 @@ class VendorsTable
                     ->label('Durum')
                     ->options($statusOptions)
                     ->sortable(),
+                TextColumn::make('kyc_status')
+                    ->label('KYC')
+                    ->badge()
+                    ->color(fn ($state): string => match ($state) {
+                        'pending' => 'warning',
+                        'under_review' => 'info',
+                        'verified' => 'success',
+                        'rejected' => 'danger',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn ($state): string => match ($state) {
+                        'pending' => 'Beklemede',
+                        'under_review' => 'İnceleniyor',
+                        'verified' => 'Doğrulandı',
+                        'rejected' => 'Reddedildi',
+                        default => $state ?? '-',
+                    })
+                    ->sortable(),
+                TextColumn::make('application_status')
+                    ->label('Başvuru')
+                    ->badge()
+                    ->color(fn ($state): string => match ($state) {
+                        'pending' => 'warning',
+                        'under_review' => 'info',
+                        'approved' => 'success',
+                        'rejected' => 'danger',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn ($state): string => match ($state) {
+                        'pending' => 'Beklemede',
+                        'under_review' => 'İnceleniyor',
+                        'approved' => 'Onaylandı',
+                        'rejected' => 'Reddedildi',
+                        default => $state ?? '-',
+                    })
+                    ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -63,6 +99,14 @@ class VendorsTable
                 SelectFilter::make('status')
                     ->label('Durum')
                     ->options($statusOptions),
+                SelectFilter::make('kyc_status')
+                    ->label('KYC Durumu')
+                    ->options([
+                        'pending' => 'Beklemede',
+                        'under_review' => 'İnceleniyor',
+                        'verified' => 'Doğrulandı',
+                        'rejected' => 'Reddedildi',
+                    ]),
             ])
             ->recordActions([
                 EditAction::make(),

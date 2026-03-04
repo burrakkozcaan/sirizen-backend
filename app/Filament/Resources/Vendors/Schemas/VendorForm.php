@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Vendors\Schemas;
 
 use App\CompanyType;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -19,6 +20,13 @@ class VendorForm
             'pending' => 'İncelemede',
             'active' => 'Onaylandı',
             'suspended' => 'Askıya alındı',
+        ];
+
+        $applicationStatusOptions = [
+            'pending' => 'Beklemede',
+            'under_review' => 'İnceleniyor',
+            'approved' => 'Onaylandı',
+            'rejected' => 'Reddedildi',
         ];
 
         return $schema
@@ -92,12 +100,56 @@ class VendorForm
                         Tab::make('Durum')
                             ->schema([
                                 Section::make('Onay Durumu')
+                                    ->columns(2)
                                     ->schema([
                                         Select::make('status')
                                             ->label('Durum')
                                             ->options($statusOptions)
                                             ->required(),
+                                        Select::make('application_status')
+                                            ->label('Başvuru Durumu')
+                                            ->options($applicationStatusOptions),
                                     ]),
+                            ]),
+                        Tab::make('KYC & Banka')
+                            ->schema([
+                                Section::make('KYC Durumu')
+                                    ->columns(2)
+                                    ->schema([
+                                        Select::make('kyc_status')
+                                            ->label('KYC Durumu')
+                                            ->options([
+                                                'pending' => 'Beklemede',
+                                                'under_review' => 'İnceleniyor',
+                                                'verified' => 'Doğrulandı',
+                                                'rejected' => 'Reddedildi',
+                                            ]),
+                                        DateTimePicker::make('kyc_verified_at')
+                                            ->label('Doğrulanma Tarihi')
+                                            ->disabled(),
+                                        Textarea::make('kyc_notes')
+                                            ->label('KYC Notları')
+                                            ->columnSpanFull(),
+                                    ]),
+
+                                Section::make('Banka Bilgileri')
+                                    ->columns(2)
+                                    ->schema([
+                                        TextInput::make('iban')
+                                            ->label('IBAN'),
+                                        TextInput::make('bank_name')
+                                            ->label('Banka Adı'),
+                                        TextInput::make('account_holder_name')
+                                            ->label('Hesap Sahibi'),
+                                    ]),
+
+                                Section::make('Ret Nedeni')
+                                    ->schema([
+                                        Textarea::make('rejection_reason')
+                                            ->label('Ret Nedeni')
+                                            ->columnSpanFull(),
+                                    ])
+                                    ->visible(fn ($get) => $get('kyc_status') === 'rejected'),
                             ]),
                     ])
                     ->columnSpanFull(),

@@ -12,6 +12,11 @@ class DemoSeeder extends Seeder
 {
     public function run(): void
     {
+        if (app()->isProduction()) {
+            $this->command->warn('DemoSeeder production ortamında çalıştırılamaz. Atlandı.');
+            return;
+        }
+
         $this->call([
             // ========================================
             // VENDOR SİSTEMİ
