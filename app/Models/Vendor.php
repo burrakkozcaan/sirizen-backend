@@ -48,6 +48,7 @@ class Vendor extends Model
         'cancel_rate',
         'return_rate',
         'late_shipment_rate',
+        'is_official',
     ];
 
     protected function casts(): array
