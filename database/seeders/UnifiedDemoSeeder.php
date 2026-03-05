@@ -217,7 +217,7 @@ class UnifiedDemoSeeder extends Seeder
             'reviews_count' => rand(10, 500),
             'is_new' => rand(0, 100) > 70,
             'is_bestseller' => rand(0, 100) > 80,
-            'shipping_time' => rand(1, 5) . ' gün',
+            'shipping_time' => rand(1, 5),
             'currency' => 'TRY',
         ];
     }
