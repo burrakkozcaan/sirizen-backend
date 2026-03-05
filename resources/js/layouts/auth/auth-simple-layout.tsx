@@ -15,7 +15,7 @@ export default function AuthSimpleLayout({
     description,
 }: PropsWithChildren<AuthLayoutProps>) {
     return (
-        <div className="flex min-h-svh flex-col items-center justify-center bg-zinc-50 dark:bg-zinc-950 p-4 md:p-10 overflow-visible">
+        <div className="flex min-h-svh flex-col items-center justify-center bg-white dark:bg-zinc-950 p-4 md:p-10 overflow-visible">
             <div className="w-full max-w-md overflow-visible">
                 <div className="flex flex-col gap-6 overflow-visible">
                     {/* Logo */}
@@ -37,7 +37,7 @@ export default function AuthSimpleLayout({
                     </div>
 
                     {/* Card */}
-                    <div className="rounded-2xl border border-zinc-950/10 bg-white px-6 py-8 shadow-sm dark:border-white/10 dark:bg-zinc-900">
+                    <div className="rounded-2xl border border-zinc-950/10 bg-white px-6 py-8 dark:border-white/10 dark:bg-zinc-900">
                         {children}
                     </div>
                 </div>
