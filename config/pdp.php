@@ -15,16 +15,17 @@ return [
     |--------------------------------------------------------------------------
     | Her kategori grubunun key'i. DB'deki category_groups.key ile eşleşmeli.
     */
+    // Keys must EXACTLY match category_groups.key in DB
     'category_groups' => [
-        'giyim' => 'giyim',
-        'elektronik' => 'elektronik',
-        'kozmetik' => 'kozmetik',
-        'ev_yasam' => 'ev_yasam',
-        'gida' => 'gida',
-        'kitap' => 'kitap',
-        'spor' => 'spor',
-        'anne-cocuk' => 'anne-cocuk',
-        'default' => 'default',
+        'giyim'          => 'giyim',
+        'elektronik'     => 'elektronik',
+        'kozmetik'       => 'kozmetik',
+        'ev-yasam'       => 'ev-yasam',
+        'spor'           => 'spor',
+        'ayakkabi-canta' => 'ayakkabi-canta',
+        'anne-cocuk'     => 'anne-cocuk',
+        'supermarket'    => 'supermarket',
+        'default'        => 'default',
     ],
 
     /*
@@ -37,43 +38,51 @@ return [
     'category_attributes' => [
         'giyim' => [
             'allowed_variant_attributes' => ['beden', 'renk', 'boy'],
-            'allowed_highlight_attributes' => ['material', 'kalip', 'yaka_tipi', 'kol_boyu', 'desen'],
+            'allowed_highlight_attributes' => ['malzeme', 'kalip', 'yaka_tipi', 'kol_boyu', 'desen'],
             'required_attributes' => ['beden'],
         ],
         'elektronik' => [
+            // boyut YOK — TV 55" gibi tek SKU, kullanıcı seçimi değil
             'allowed_variant_attributes' => ['renk', 'kapasite', 'ram', 'depolama'],
             'allowed_highlight_attributes' => ['marka', 'model', 'garanti', 'islemci', 'ekran_boyutu', 'pil_kapasitesi'],
             'required_attributes' => [],
         ],
         'kozmetik' => [
-            // ❌ beden YOK - kozmetikte beden saçma
+            // beden YOK — kozmetikte beden saçma
             'allowed_variant_attributes' => ['renk', 'hacim', 'ton'],
             'allowed_highlight_attributes' => ['cilt_tipi', 'icerik', 'kullanim_alani', 'spf', 'formul'],
             'required_attributes' => [],
         ],
-        'ev_yasam' => [
+        'ev-yasam' => [
             'allowed_variant_attributes' => ['renk', 'boyut', 'malzeme'],
             'allowed_highlight_attributes' => ['olcu', 'agirlik', 'malzeme', 'marka'],
             'required_attributes' => [],
         ],
-        'gida' => [
-            'allowed_variant_attributes' => ['agirlik', 'adet'],
-            'allowed_highlight_attributes' => ['son_kullanma', 'mensei', 'besin_degeri', 'alerjen'],
-            'required_attributes' => ['son_kullanma'],
-        ],
-        'anne-cocuk' => [
-            // Oyuncakta beden olmaz, sadece renk ve boyut (set/parça sayısı değil)
-            'allowed_variant_attributes' => ['renk', 'boyut'],
-            'allowed_highlight_attributes' => ['yas_grubu', 'malzeme', 'guvenlik_sinifi', 'marka'],
-            'required_attributes' => [],
-        ],
         'spor' => [
-            'allowed_variant_attributes' => ['beden', 'renk', 'boyut'],
+            // beden: spor giyim (S/M/L), numara: spor ayakkabı (40/41/42)
+            'allowed_variant_attributes' => ['beden', 'numara', 'renk', 'boyut'],
             'allowed_highlight_attributes' => ['materyal', 'cinsiyet', 'yas_grubu', 'marka'],
             'required_attributes' => [],
         ],
+        'ayakkabi-canta' => [
+            // numara: ayakkabı, renk: çanta + ayakkabı
+            'allowed_variant_attributes' => ['numara', 'renk', 'boyut'],
+            'allowed_highlight_attributes' => ['malzeme', 'renk', 'marka', 'model'],
+            'required_attributes' => [],
+        ],
+        'anne-cocuk' => [
+            // beden: bebek giyim (0-3 Ay, 3-6 Ay), renk: tüm ürünler, boyut: oyuncak/set
+            'allowed_variant_attributes' => ['beden', 'renk', 'boyut'],
+            'allowed_highlight_attributes' => ['yas_grubu', 'malzeme', 'guvenlik_sinifi', 'marka'],
+            'required_attributes' => [],
+        ],
+        'supermarket' => [
+            'allowed_variant_attributes' => ['hacim', 'agirlik', 'adet'],
+            'allowed_highlight_attributes' => ['son_kullanma', 'mensei', 'besin_degeri', 'alerjen'],
+            'required_attributes' => [],
+        ],
         'default' => [
-            'allowed_variant_attributes' => ['renk', 'boyut'],
+            'allowed_variant_attributes' => ['renk', 'boyut', 'beden'],
             'allowed_highlight_attributes' => ['marka', 'model'],
             'required_attributes' => [],
         ],
@@ -112,7 +121,7 @@ return [
             'max_quantity' => 10,
             'show_installments' => false,
         ],
-        'ev_yasam' => [
+        'ev-yasam' => [
             'disable_add_until_variant_selected' => false,
             'show_size_guide' => false,
             'show_stock_warning_threshold' => 5,
@@ -121,10 +130,19 @@ return [
             'max_quantity' => 20,
             'show_installments' => true,
         ],
-        'gida' => [
+        'ayakkabi-canta' => [
+            'disable_add_until_variant_selected' => true,
+            'show_size_guide' => true,
+            'show_stock_warning_threshold' => 5,
+            'allow_multi_seller' => false,
+            'show_quantity_selector' => true,
+            'max_quantity' => 10,
+            'show_installments' => true,
+        ],
+        'supermarket' => [
             'disable_add_until_variant_selected' => false,
             'show_size_guide' => false,
-            'show_stock_warning_threshold' => 5,
+            'show_stock_warning_threshold' => 10,
             'allow_multi_seller' => false,
             'show_quantity_selector' => true,
             'max_quantity' => 50,
@@ -174,7 +192,19 @@ return [
             'show_sold_count' => true,
             'show_review_count' => true,
         ],
-        'ev_yasam' => [
+        'ev-yasam' => [
+            'show_view_count' => false,
+            'show_cart_count' => false,
+            'show_sold_count' => true,
+            'show_review_count' => true,
+        ],
+        'ayakkabi-canta' => [
+            'show_view_count' => true,
+            'show_cart_count' => true,
+            'show_sold_count' => true,
+            'show_review_count' => true,
+        ],
+        'supermarket' => [
             'show_view_count' => false,
             'show_cart_count' => false,
             'show_sold_count' => true,

@@ -158,13 +158,7 @@ class UnifiedPdpService
                     $attrs['renk'] = $variant->color;
                 }
                 if ($variant->size) {
-                    // size kolonu kategori grubuna göre farklı key'e map et
-                    $sizeKey = match ($categoryGroup) {
-                        'kozmetik', 'gida' => 'hacim',
-                        'ev_yasam', 'elektronik' => 'boyut',
-                        default => 'beden',
-                    };
-                    $attrs[$sizeKey] = $variant->size;
+                    $attrs[$this->sizeKeyForGroup($categoryGroup, $variant->size)] = $variant->size;
                 }
                 // value kolonunda ton bilgisi olabilir (kozmetik için)
                 if ($variant->value && !$variant->color && !$variant->size) {
@@ -462,21 +456,42 @@ class UnifiedPdpService
         return 'in_stock';
     }
 
+    /**
+     * size kolonu için kategori ve değere göre doğru attribute key'i döner.
+     * - kozmetik/supermarket → hacim (50ml, 100ml)
+     * - ev-yasam/elektronik → boyut (55", L, XL) - elektronik'te filtered olur zaten
+     * - ayakkabi-canta / spor + numerik değer → numara (40,41,42)
+     * - anne-cocuk / giyim / spor + alfanumerik → beden (S,M,L, 0-3 Ay)
+     */
+    protected function sizeKeyForGroup(string $categoryGroup, string $sizeValue): string
+    {
+        return match (true) {
+            in_array($categoryGroup, ['kozmetik', 'supermarket', 'gida']) => 'hacim',
+            in_array($categoryGroup, ['ev-yasam', 'elektronik'])          => 'boyut',
+            $categoryGroup === 'ayakkabi-canta'                           => 'numara',
+            // spor: numerik 28-50 arası → numara (ayakkabı), diğer → beden (giyim)
+            $categoryGroup === 'spor' && preg_match('/^\d+$/', trim($sizeValue))
+                && (int) $sizeValue >= 28 && (int) $sizeValue <= 50      => 'numara',
+            default                                                        => 'beden',
+        };
+    }
+
     protected function getAttributeLabel(string $key): string
     {
         $labels = [
-            'beden' => 'Beden',
-            'renk' => 'Renk',
-            'boy' => 'Boy',
+            'beden'    => 'Beden',
+            'numara'   => 'Numara',
+            'renk'     => 'Renk',
+            'boy'      => 'Boy',
             'kapasite' => 'Kapasite',
-            'ram' => 'RAM',
+            'ram'      => 'RAM',
             'depolama' => 'Depolama',
-            'hacim' => 'Hacim',
-            'ton' => 'Ton',
-            'boyut' => 'Boyut',
-            'malzeme' => 'Malzeme',
-            'agirlik' => 'Ağırlık',
-            'adet' => 'Adet',
+            'hacim'    => 'Hacim',
+            'ton'      => 'Ton',
+            'boyut'    => 'Boyut',
+            'malzeme'  => 'Malzeme',
+            'agirlik'  => 'Ağırlık',
+            'adet'     => 'Adet',
         ];
 
         return $labels[$key] ?? ucfirst($key);
