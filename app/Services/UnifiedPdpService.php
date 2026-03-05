@@ -158,7 +158,13 @@ class UnifiedPdpService
                     $attrs['renk'] = $variant->color;
                 }
                 if ($variant->size) {
-                    $attrs['beden'] = $variant->size;
+                    // size kolonu kategori grubuna göre farklı key'e map et
+                    $sizeKey = match ($categoryGroup) {
+                        'kozmetik', 'gida' => 'hacim',
+                        'ev_yasam', 'elektronik' => 'boyut',
+                        default => 'beden',
+                    };
+                    $attrs[$sizeKey] = $variant->size;
                 }
                 // value kolonunda ton bilgisi olabilir (kozmetik için)
                 if ($variant->value && !$variant->color && !$variant->size) {
@@ -212,7 +218,12 @@ class UnifiedPdpService
                         $attrs['renk'] = $v->color;
                     }
                     if ($v->size) {
-                        $attrs['beden'] = $v->size;
+                        $sizeKey = match ($categoryGroup) {
+                            'kozmetik', 'gida' => 'hacim',
+                            'ev_yasam', 'elektronik' => 'boyut',
+                            default => 'beden',
+                        };
+                        $attrs[$sizeKey] = $v->size;
                     }
                     if ($v->value && !$v->color && !$v->size) {
                         $attrs['ton'] = $v->value;

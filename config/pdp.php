@@ -23,6 +23,7 @@ return [
         'gida' => 'gida',
         'kitap' => 'kitap',
         'spor' => 'spor',
+        'anne-cocuk' => 'anne-cocuk',
         'default' => 'default',
     ],
 
@@ -59,6 +60,17 @@ return [
             'allowed_variant_attributes' => ['agirlik', 'adet'],
             'allowed_highlight_attributes' => ['son_kullanma', 'mensei', 'besin_degeri', 'alerjen'],
             'required_attributes' => ['son_kullanma'],
+        ],
+        'anne-cocuk' => [
+            // Oyuncakta beden olmaz, sadece renk ve boyut (set/parça sayısı değil)
+            'allowed_variant_attributes' => ['renk', 'boyut'],
+            'allowed_highlight_attributes' => ['yas_grubu', 'malzeme', 'guvenlik_sinifi', 'marka'],
+            'required_attributes' => [],
+        ],
+        'spor' => [
+            'allowed_variant_attributes' => ['beden', 'renk', 'boyut'],
+            'allowed_highlight_attributes' => ['materyal', 'cinsiyet', 'yas_grubu', 'marka'],
+            'required_attributes' => [],
         ],
         'default' => [
             'allowed_variant_attributes' => ['renk', 'boyut'],
@@ -118,6 +130,15 @@ return [
             'max_quantity' => 50,
             'show_installments' => false,
         ],
+        'anne-cocuk' => [
+            'disable_add_until_variant_selected' => false,
+            'show_size_guide' => false,
+            'show_stock_warning_threshold' => 5,
+            'allow_multi_seller' => false,
+            'show_quantity_selector' => true,
+            'max_quantity' => 10,
+            'show_installments' => true,
+        ],
         'default' => [
             'disable_add_until_variant_selected' => false,
             'show_size_guide' => false,
@@ -162,6 +183,12 @@ return [
         'gida' => [
             'show_view_count' => false,
             'show_cart_count' => false,
+            'show_sold_count' => true,
+            'show_review_count' => true,
+        ],
+        'anne-cocuk' => [
+            'show_view_count' => false,
+            'show_cart_count' => true,
             'show_sold_count' => true,
             'show_review_count' => true,
         ],
