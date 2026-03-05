@@ -108,7 +108,7 @@ class VendorController extends Controller
 
         $query = $vendor->products()
             ->with(['category', 'brand', 'images'])
-            ->where('status', 'active');
+            ->where('is_active', true);
 
         // Sorting
         $sortBy = $request->input('sort_by', 'created_at');
