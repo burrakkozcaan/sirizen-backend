@@ -210,7 +210,7 @@ class UnifiedPdpService
         return [
             'enabled' => true,
             'attributes' => array_values($attributeGroups),
-            'combinations' => $product->variants->map(function($v) use ($allowedAttributes) {
+            'combinations' => $product->variants->map(function($v) use ($allowedAttributes, $categoryGroup) {
                 // attribute_values JSON veya color/size kolonlarından oku
                 $attrs = $v->attribute_values ?? [];
                 if (empty($attrs)) {
