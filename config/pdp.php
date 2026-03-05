@@ -71,8 +71,8 @@ return [
             'required_attributes' => [],
         ],
         'anne-cocuk' => [
-            // beden: bebek giyim (0-3 Ay, 3-6 Ay), renk: tüm ürünler, boyut: oyuncak/set
-            'allowed_variant_attributes' => ['beden', 'renk', 'boyut'],
+            // yas_grubu: bebek giyim (0-3 Ay, 3-6 Ay), renk: tüm ürünler, boyut: oyuncak/set, beden: büyük çocuk giyim
+            'allowed_variant_attributes' => ['yas_grubu', 'beden', 'renk', 'boyut'],
             'allowed_highlight_attributes' => ['yas_grubu', 'malzeme', 'guvenlik_sinifi', 'marka'],
             'required_attributes' => [],
         ],

@@ -464,6 +464,8 @@ class UnifiedPdpService
             in_array($categoryGroup, ['kozmetik', 'supermarket', 'gida']) => 'hacim',
             in_array($categoryGroup, ['ev-yasam', 'elektronik'])          => 'boyut',
             $categoryGroup === 'ayakkabi-canta'                           => 'numara',
+            // anne-cocuk: yaş aralıkları (0-3 Ay, 3-6 Ay vb.) → yas_grubu
+            $categoryGroup === 'anne-cocuk'                               => 'yas_grubu',
             // spor: numerik 28-50 arası → numara (ayakkabı), diğer → beden (giyim)
             $categoryGroup === 'spor' && preg_match('/^\d+$/', trim($sizeValue))
                 && (int) $sizeValue >= 28 && (int) $sizeValue <= 50      => 'numara',
@@ -474,19 +476,20 @@ class UnifiedPdpService
     protected function getAttributeLabel(string $key): string
     {
         $labels = [
-            'beden'    => 'Beden',
-            'numara'   => 'Numara',
-            'renk'     => 'Renk',
-            'boy'      => 'Boy',
-            'kapasite' => 'Kapasite',
-            'ram'      => 'RAM',
-            'depolama' => 'Depolama',
-            'hacim'    => 'Hacim',
-            'ton'      => 'Ton',
-            'boyut'    => 'Boyut',
-            'malzeme'  => 'Malzeme',
-            'agirlik'  => 'Ağırlık',
-            'adet'     => 'Adet',
+            'beden'     => 'Beden',
+            'numara'    => 'Numara',
+            'renk'      => 'Renk',
+            'boy'       => 'Boy',
+            'kapasite'  => 'Kapasite',
+            'ram'       => 'RAM',
+            'depolama'  => 'Depolama',
+            'hacim'     => 'Hacim',
+            'ton'       => 'Ton',
+            'boyut'     => 'Boyut',
+            'malzeme'   => 'Malzeme',
+            'agirlik'   => 'Ağırlık',
+            'adet'      => 'Adet',
+            'yas_grubu' => 'Yaş Grubu',
         ];
 
         return $labels[$key] ?? ucfirst($key);
