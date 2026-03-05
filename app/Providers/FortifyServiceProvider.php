@@ -79,8 +79,9 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::registerView(fn () => Inertia::render('auth/register', [
             'categories' => Category::query()
                 ->where('is_active', true)
+                ->whereNull('parent_id')
                 ->orderBy('order')
-                ->get(['id', 'name'])
+                ->get(['id', 'name', 'commission_rate'])
                 ->values(),
         ]));
 

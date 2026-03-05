@@ -72,4 +72,9 @@ class Category extends Model
             ->withPivot('is_required')
             ->withTimestamps();
     }
+
+    public function faqs(): HasMany
+    {
+        return $this->hasMany(ProductFaq::class)->orderBy('order');
+    }
 }

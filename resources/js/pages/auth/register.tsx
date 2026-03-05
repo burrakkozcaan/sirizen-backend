@@ -22,6 +22,7 @@ import AuthLayout from '@/layouts/auth-layout';
 type CategoryOption = {
     id: number;
     name: string;
+    commission_rate?: number | null;
 };
 
 interface RegisterProps {
@@ -137,7 +138,14 @@ export default function Register({ categories = [] }: RegisterProps) {
                                                 key={category.id}
                                                 value={String(category.id)}
                                             >
-                                                {category.name}
+                                                <span className="flex items-center justify-between gap-3 w-full">
+                                                    <span>{category.name}</span>
+                                                    {category.commission_rate != null && (
+                                                        <span className="ml-auto text-xs font-medium text-muted-foreground">
+                                                            %{Number(category.commission_rate).toFixed(0)} komisyon
+                                                        </span>
+                                                    )}
+                                                </span>
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -325,7 +333,7 @@ export default function Register({ categories = [] }: RegisterProps) {
                                     name="address"
                                     placeholder="Tam Adres Bilgisi"
                                     rows={3}
-                                    className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="flex min-h-[80px] w-full rounded-[10px] border border-zinc-950/10 bg-transparent px-3 py-2 text-sm leading-5 text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-zinc-950 dark:border-white/10 dark:focus:border-white/60 disabled:cursor-not-allowed disabled:opacity-50"
                                 />
                                 <InputError message={errors.address} />
                             </div>

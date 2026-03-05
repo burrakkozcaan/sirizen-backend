@@ -60,7 +60,9 @@ class CategoryController extends Controller
             return $this->index();
         }
 
-        $category = Category::with(['children.children', 'categoryGroup'])
+        $category = Category::with(['children.children', 'categoryGroup', 'faqs' => function ($q) {
+                $q->whereNull('product_id')->where('is_active', true)->orderBy('order');
+            }])
             ->where('slug', $slug)
             ->first();
 
@@ -140,6 +142,17 @@ class CategoryController extends Controller
                     'name' => $category->name,
                     'slug' => $category->slug,
                     'description' => $category->description,
+                    'meta_title' => $category->meta_title,
+                    'meta_description' => $category->meta_description,
+                    'meta_keywords' => $category->meta_keywords,
+                    'header_text' => $category->header_text,
+                    'footer_text' => $category->footer_text,
+                    'canonical_url' => $category->canonical_url,
+                    'faqs' => $category->faqs->map(fn ($faq) => [
+                        'id' => $faq->id,
+                        'question' => $faq->question,
+                        'answer' => $faq->answer,
+                    ])->values(),
                 ],
                 'products' => $formattedProducts,
                 'filters' => $filters,
