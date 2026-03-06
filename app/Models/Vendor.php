@@ -83,10 +83,9 @@ class Vendor extends Model
         return $this->belongsToMany(Category::class, 'category_vendor');
     }
 
-    public function products(): BelongsToMany
+    public function products(): HasMany
     {
-        return $this->belongsToMany(Product::class, 'product_sellers')
-            ->withPivot(['price', 'stock', 'dispatch_days', 'shipping_type', 'is_featured']);
+        return $this->hasMany(Product::class);
     }
 
     public function sellerBadges(): BelongsToMany

@@ -334,7 +334,7 @@ it('defines vendor relationships', function () {
         ->and($vendor->authorizedBrands()->getRelated())->toBeInstanceOf(Brand::class)
         ->and($vendor->categories())->toBeInstanceOf(BelongsToMany::class)
         ->and($vendor->categories()->getRelated())->toBeInstanceOf(Category::class)
-        ->and($vendor->products())->toBeInstanceOf(BelongsToMany::class)
+        ->and($vendor->products())->toBeInstanceOf(HasMany::class)
         ->and($vendor->products()->getRelated())->toBeInstanceOf(Product::class)
         ->and($vendor->sellerBadges())->toBeInstanceOf(BelongsToMany::class)
         ->and($vendor->sellerBadges()->getRelated())->toBeInstanceOf(SellerBadge::class)

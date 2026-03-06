@@ -35,8 +35,8 @@ class ProductController extends Controller
                     'id' => (string) $product->id,
                     'title' => (string) $product->title,
                     'slug' => (string) $product->slug,
-                    'price' => (string) ($product->pivot->price ?? '0'),
-                    'stock' => (int) ($product->pivot->stock ?? 0),
+                    'price' => (string) ($product->price ?? '0'),
+                    'stock' => (int) ($product->stock ?? 0),
                     'is_active' => (bool) $product->is_active,
                     'created_at' => $product->created_at?->toIso8601String() ?? '',
                     'brand' => $product->brand ? [
